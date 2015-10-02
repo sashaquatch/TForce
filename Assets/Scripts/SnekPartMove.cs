@@ -3,6 +3,7 @@ using System.Collections;
 
 public class SnekPartMove : MonoBehaviour
 {
+    //Enum of 90-degree directions
     public enum direction
     {
         north,
@@ -11,12 +12,14 @@ public class SnekPartMove : MonoBehaviour
         west
     }
 
+    //The next snake part (going backwards from head)
     protected GameObject nextPart;
     public GameObject NextPart
     {
         get { return nextPart; }
     }
 
+    //The previous snake part (going forwards from tail)
     protected GameObject prevPart;
     public GameObject PrevPart
     {
@@ -24,12 +27,12 @@ public class SnekPartMove : MonoBehaviour
         set { prevPart = value; }
     }
 
-    public direction dir;
-    public direction preDir;
+    public direction dir;   //Enum direction the snake is going in.
 
-    public int xPos;
-    public int zPos;
+    public int xPos;        //Integer x-position of component
+    public int zPos;        //Integer y-position of component
 
+    //0-1 offset of component
     protected float offset;
     public float Offset
     {
@@ -46,6 +49,7 @@ public class SnekPartMove : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        //If offset is greater than 1 (meaning when the part reached the next grid space), reset back to 0 and peform head reset sequence.
         offset += 1f * Time.deltaTime;
         if(offset > 1)
         {
@@ -53,8 +57,10 @@ public class SnekPartMove : MonoBehaviour
             resetOffset();
         }
 
+        //Part is at its grid position.
         transform.position = new Vector3(xPos, .5f, zPos);
 
+        //Part is offset in its grid position
 	    switch(dir)
         {
             case direction.north:
@@ -72,11 +78,12 @@ public class SnekPartMove : MonoBehaviour
         }
     }
 
+    //Go from head-to-tail, trigger position passing if tail.
     public void startFromLast()
     {
-        if (nextPart == null)
+        if (nextPart == null)   //True when tail
         {
-            getNextDirPos();
+            posPass();
         }
         else
         {
@@ -84,27 +91,29 @@ public class SnekPartMove : MonoBehaviour
         }
     }
 
-    public void getNextDirPos()
+    //Position passing, go from tail-to-head and get the direction and position of the next snake part.
+    public void posPass()
     {
-        if(prevPart != null)
+        if(prevPart != null)    //True when not head
         {
             dir = prevPart.GetComponent<SnekPartMove>().dir;
             xPos = prevPart.GetComponent<SnekPartMove>().xPos;
             zPos = prevPart.GetComponent<SnekPartMove>().zPos;
 
-            prevPart.GetComponent<SnekPartMove>().getNextDirPos();
+            prevPart.GetComponent<SnekPartMove>().posPass();
         }
     }
 
+    //Does nothing for any non-head parts.
     public virtual void resetOffset()
     {
 
     }
 
+    //Generate a new snake part as the new tail
     public void eat()
     {
-        
-        if(nextPart == null)
+        if(nextPart == null)    //True when tail
         {
             nextPart = (GameObject)Instantiate(Resources.Load("SnekPart"));
             nextPart.GetComponent<SnekPartMove>().PrevPart = transform.gameObject;

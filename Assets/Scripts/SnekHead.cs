@@ -3,13 +3,17 @@ using System.Collections;
 
 public class SnekHead : SnekPartMove
 {
+    //Head reset
     public override void resetOffset()
     {
+        //Eat testing
         if (Input.GetKey("q"))
             eat();
 
+        //Go to the last snake part and trigger pos-passing
         startFromLast();
 
+        //Change position based on direction faced
         switch (dir)
         {
             case direction.north:
@@ -26,6 +30,7 @@ public class SnekHead : SnekPartMove
                 break;
         }
 
+        //Key input
         if (Input.GetKey("w") && dir != direction.south)
         {
             dir = direction.north;
