@@ -50,7 +50,7 @@ public class SnekPartMove : MonoBehaviour
 	void Update ()
     {
         //If offset is greater than 1 (meaning when the part reached the next grid space), reset back to 0 and peform head reset sequence.
-        offset += 1f * Time.deltaTime;
+        offset += 2f * Time.deltaTime;
         if(offset > 1)
         {
             offset = 0;
