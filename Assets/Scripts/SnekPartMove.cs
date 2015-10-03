@@ -17,7 +17,6 @@ public class SnekPartMove : MonoBehaviour
     public GameObject NextPart
     {
         get { return nextPart; }
-        set { nextPart = value; }
     }
 
     //The previous snake part (going forwards from tail)
@@ -28,89 +27,104 @@ public class SnekPartMove : MonoBehaviour
         set { prevPart = value; }
     }
 
-    public int xPos;        //Integer x-position of part
-    public int zPos;        //Integer y-position of part
-    public direction dir;   //Enum direction of part
-    public float speed;     //Speed of part
-    protected float scale;  //Scale of part
-    protected bool eating;  //True if tail is in eating state and isn't shrinking
+    public direction dir;   //Enum direction the snake is going in.
+
+    public int xPos;        //Integer x-position of component
+    public int zPos;        //Integer y-position of component
+
+    //0-1 offset of component
+    protected float offset;
+    public float Offset
+    {
+        get{ return offset; }
+    }
 
 	// Use this for initialization
 	void Start ()
     {
-        subStart();
+        offset = 0;
+        transform.position = new Vector3(xPos, .5f, zPos);
 	}
-
-    //Overridable start
-    public virtual void subStart()
-    {
-        eating = false;
-        scale = 1;
-    }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        //If offset is greater than 1 (meaning when the part reached the next grid space), reset back to 0 and peform head reset sequence.
+        offset += 2f * Time.deltaTime;
+        if(offset > 1)
+        {
+            offset = 0;
+            resetOffset();
+        }
+
         //Part is at its grid position.
-        transform.position = new Vector3(xPos, 0, zPos);
+        transform.position = new Vector3(xPos, .5f, zPos);
 
-        modScale();     //Modifiy the scale of the part
-        scaleOffset();  //Offset the part based on its scale
-    }
-
-    //Shrink or destroy the tail if eating isn't in progress.
-    public virtual void modScale()
-    {
-        //Shrink last part.
-        if (!eating && nextPart == null)
+        //Part is offset in its grid position
+	    switch(dir)
         {
-            scale -= speed * Time.deltaTime;
-            if (scale < .01)
-            {
-                Destroy(gameObject);
-            }
+            case direction.north:
+                transform.Translate(0, 0, offset);
+                break;
+            case direction.east:
+                transform.Translate(offset, 0, 0);
+                break;
+            case direction.south:
+                transform.Translate(0, 0, -offset);
+                break;
+            case direction.west:
+                transform.Translate(-offset, 0, 0);
+                break;
         }
     }
 
-    //Scales and offsets any part with scale less than 1.
-    public virtual void scaleOffset()
+    //Go from head-to-tail, trigger position passing if tail.
+    public void startFromLast()
     {
-        if (scale < 1)
+        if (nextPart == null)   //True when tail
         {
-            switch (dir)
-            {
-                case direction.north:
-                    transform.Translate(0, 0, -scale / 2 + .5f);
-                    transform.localScale = new Vector3(1, 1, scale);
-                    break;
-                case direction.east:
-                    transform.Translate(-scale / 2 + .5f, 0, 0);
-                    transform.localScale = new Vector3(scale, 1, 1);
-                    break;
-                case direction.south:
-                    transform.Translate(0, 0, scale / 2 - .5f);
-                    transform.localScale = new Vector3(1, 1, -scale);
-                    break;
-                case direction.west:
-                    transform.Translate(scale / 2 - .5f, 0, 0);
-                    transform.localScale = new Vector3(-scale, 1, 1);
-                    break;
-            }
-        }
-    }
-
-    //Sets the eating of the tail to be true or false.
-    public void setEating(bool _eating)
-    {
-        if (nextPart == null)    //True when tail
-        {
-            eating = _eating;
-            if (!eating)
-                scale = 1;      //Fix for head and tail not moving in sync.
+            posPass();
         }
         else
         {
-            nextPart.GetComponent<SnekPartMove>().setEating(_eating);   //Travel back to tail.
+            nextPart.GetComponent<SnekPartMove>().startFromLast();
         }
+    }
+
+    //Position passing, go from tail-to-head and get the direction and position of the next snake part.
+    public void posPass()
+    {
+        if(prevPart != null)    //True when not head
+        {
+            dir = prevPart.GetComponent<SnekPartMove>().dir;
+            xPos = prevPart.GetComponent<SnekPartMove>().xPos;
+            zPos = prevPart.GetComponent<SnekPartMove>().zPos;
+
+            prevPart.GetComponent<SnekPartMove>().posPass();
+        }
+    }
+
+    //Does nothing for any non-head parts.
+    public virtual void resetOffset()
+    {
+
+    }
+
+    //Generate a new snake part as the new tail
+    public void eat()
+    {
+        if(nextPart == null)    //True when tail
+        {
+            nextPart = (GameObject)Instantiate(Resources.Load("SnekPart"));
+            nextPart.GetComponent<SnekPartMove>().PrevPart = transform.gameObject;
+            nextPart.GetComponent<SnekPartMove>().dir = dir;
+            nextPart.GetComponent<SnekPartMove>().xPos = xPos;
+            nextPart.GetComponent<SnekPartMove>().zPos = zPos;
+        }
+        else
+        {
+            nextPart.GetComponent<SnekPartMove>().eat();
+        }
+        
     }
 }
