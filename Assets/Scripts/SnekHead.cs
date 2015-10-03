@@ -1,8 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class SnekHead : SnekPartMove
 {
+	public string up;
+	public string left;
+	public string right;
+	public string down;
+
+
+	void Start()
+	{
+
+	}
+
     //Head reset
     public override void resetOffset()
     {
@@ -31,21 +43,25 @@ public class SnekHead : SnekPartMove
         }
 
         //Key input
-        if (Input.GetKey("w") && (dir != direction.south || nextPart == null))  //Cannot move backwards if there's more than one part
+        if (Input.GetKey(up) && (dir != direction.south || nextPart == null))  //Cannot move backwards if there's more than one part
         {
             dir = direction.north;
+			this.gameObject.transform.GetChild(0).rotation = 0.0f;
         }
-        else if (Input.GetKey("d") && (dir != direction.west || nextPart == null))
+        else if (Input.GetKey(right) && (dir != direction.west || nextPart == null))
         {
             dir = direction.east;
+			this.gameObject.transform.GetChild(0).rotation.y = 90.0f;
         }
-        else if (Input.GetKey("s") && (dir != direction.north || nextPart == null))
+        else if (Input.GetKey(down) && (dir != direction.north || nextPart == null))
         {
             dir = direction.south;
+			this.gameObject.transform.GetChild(0).rotation.y = 180.0f;
         }
-        else if (Input.GetKey("a") && (dir != direction.east || nextPart == null))
+        else if (Input.GetKey(left) && (dir != direction.east || nextPart == null))
         {
             dir = direction.west;
+			this.gameObject.transform.GetChild(0).rotation.y = 270.0f;
         }
     }
 }
