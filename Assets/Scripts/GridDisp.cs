@@ -8,7 +8,10 @@ public class GridDisp : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+
+
+
+
 
 
 
@@ -16,6 +19,7 @@ public class GridDisp : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 
 
 
