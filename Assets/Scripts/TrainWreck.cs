@@ -20,6 +20,10 @@ public class TrainWreck : MonoBehaviour
 		if (other.GetComponent<Collider>().tag == "TrainPiece")
         {
 			this.gameObject.transform.parent.GetComponent<SnekHead>().KillTrain();
-		}
+        }
+        else if (other.GetComponent<Collider>().tag == "Item")
+        {
+            Destroy(other.transform.parent.gameObject);
+        }
 	}
 }
