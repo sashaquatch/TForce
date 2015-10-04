@@ -4,11 +4,12 @@ using System.Collections;
 
 public class SnekHead : SnekPartMove
 {
+    public string eatString;
+
 	public string up;
 	public string left;
 	public string right;
 	public string down;
-
 
 	void Start()
 	{
@@ -19,7 +20,7 @@ public class SnekHead : SnekPartMove
     public override void resetOffset()
     {
         //Eat testing
-        if (Input.GetKey("q"))
+        if (Input.GetKey(eatString))
             eat();
 
         //Go to the last snake part and trigger pos-passing
@@ -69,12 +70,16 @@ public class SnekHead : SnekPartMove
 	public void KillTrain()
 	{
 		GameObject end = this.gameObject;
-		while (end.GetComponent<SnekPartMove>().NextPart != null) {
+		while (end.GetComponent<SnekPartMove>().NextPart != null) 
+        {
 			end = end.GetComponent<SnekPartMove>().NextPart;
 		}
-		while (end.GetComponent<SnekPartMove>().PrevPart != null) {
+		while (end.GetComponent<SnekPartMove>().PrevPart != null) 
+        {
 			end = end.GetComponent<SnekPartMove>().PrevPart;
 			Destroy(end.GetComponent<SnekPartMove>().NextPart);
 		}
-		Destroy (this.gameObject);
-	}}
+		
+        Destroy (this.gameObject);
+	}
+}
