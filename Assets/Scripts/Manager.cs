@@ -10,17 +10,33 @@ public class Manager : MonoBehaviour
 	void Start ()
     {
         items = new List<GameObject>();
+        generateItems();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (items.Count < 1)
+        cleanItems();
+        generateItems();
+    }
+
+    void generateItems()
+    {
+        while (items.Count < 3)
         {
             GameObject newItem = (GameObject)Instantiate(Resources.Load("Item"));
-            newItem.GetComponent<Item>().xPos = Random.Range(0, 5);
-            newItem.GetComponent<Item>().zPos = Random.Range(0, 5);
+            newItem.GetComponent<Item>().xPos = Random.Range(0, 10);
+            newItem.GetComponent<Item>().zPos = Random.Range(0, 10);
             items.Add(newItem);
+        }
+    }
+
+    void cleanItems()
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (items[i] == null)
+                items.RemoveAt(i);
         }
     }
 }

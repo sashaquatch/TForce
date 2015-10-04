@@ -14,6 +14,9 @@ public class Item : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
+        if (other.GetComponent<Collider>().tag == "TrainPiece")
+        {
+            Destroy(gameObject);
+        }
     }
 }
