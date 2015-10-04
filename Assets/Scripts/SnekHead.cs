@@ -5,7 +5,6 @@ using System.Collections;
 public class SnekHead : SnekPartMove
 {
     public string eatString;
-
 	public string up;
 	public string left;
 	public string right;
