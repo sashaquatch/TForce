@@ -23,6 +23,7 @@ public class TrainWreck : MonoBehaviour
         }
         else if (other.GetComponent<Collider>().tag == "Item")
         {
+            this.gameObject.transform.parent.GetComponent<SnekHead>().setEat();
             Destroy(other.transform.parent.gameObject);
         }
 	}

@@ -4,7 +4,8 @@ using System.Collections;
 
 public class SnekHead : SnekPartMove
 {
-    public string eatString;
+    public bool goEat;
+
 	public string up;
 	public string left;
 	public string right;
@@ -14,8 +15,11 @@ public class SnekHead : SnekPartMove
     public override void resetOffset()
     {
         //Eat testing
-        if (Input.GetKey(eatString))
+        if (goEat)
+        {
+            goEat = false;
             eat();
+        }
 
         //Go to the last snake part and trigger pos-passing
         startFromLast();
@@ -76,4 +80,9 @@ public class SnekHead : SnekPartMove
 		
         Destroy (this.gameObject);
 	}
+
+    public void setEat()
+    {
+        goEat = true;
+    }
 }
