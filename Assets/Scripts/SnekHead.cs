@@ -10,11 +10,6 @@ public class SnekHead : SnekPartMove
 	public string right;
 	public string down;
 
-	void Start()
-	{
-
-	}
-
     //Head reset
     public override void resetOffset()
     {

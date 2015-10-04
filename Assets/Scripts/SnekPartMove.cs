@@ -27,10 +27,12 @@ public class SnekPartMove : MonoBehaviour
         set { prevPart = value; }
     }
 
+    public float speed;
     public direction dir;   //Enum direction the snake is going in.
-
     public int xPos;        //Integer x-position of component
     public int zPos;        //Integer y-position of component
+
+    public Material color;
 
     //0-1 offset of component
     protected float offset;
@@ -44,13 +46,14 @@ public class SnekPartMove : MonoBehaviour
     {
         offset = 0;
         transform.position = new Vector3(xPos, .5f, zPos);
+        this.gameObject.transform.GetChild(0).GetComponent<Renderer>().material = color;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
         //If offset is greater than 1 (meaning when the part reached the next grid space), reset back to 0 and peform head reset sequence.
-        offset += 2f * Time.deltaTime;
+        offset += speed * Time.deltaTime;
         if(offset > 1)
         {
             offset = 0;
@@ -117,6 +120,8 @@ public class SnekPartMove : MonoBehaviour
         {
             nextPart = (GameObject)Instantiate(Resources.Load("SnekPart"));
             nextPart.GetComponent<SnekPartMove>().PrevPart = transform.gameObject;
+            nextPart.GetComponent<SnekPartMove>().color = color;
+            nextPart.GetComponent<SnekPartMove>().speed = speed;
             nextPart.GetComponent<SnekPartMove>().dir = dir;
             nextPart.GetComponent<SnekPartMove>().xPos = xPos;
             nextPart.GetComponent<SnekPartMove>().zPos = zPos;
