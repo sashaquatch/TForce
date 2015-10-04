@@ -4,6 +4,7 @@ using System.Collections.Generic;   //To use list
 
 public class Manager : MonoBehaviour
 {
+    public int itemCount;                   //Number of items.
     private List<GameObject> items;
     private List<GameObject> snakeParts;    //Snake parts for spawning comparison
     private List<GameObject> snakeHeads;    //Snake heads for spawning comparison
@@ -28,7 +29,7 @@ public class Manager : MonoBehaviour
     void generateItems()
     {
         //If there less than 3 items, fill new spawning comparison lists.
-        if (items.Count < 3)
+        if (items.Count < itemCount)
         {
             snakeParts = new List<GameObject>();
             snakeHeads = new List<GameObject>();
@@ -47,7 +48,7 @@ public class Manager : MonoBehaviour
         }
 
         //While there are less than 3 items, generate a new item
-        while (items.Count < 3)
+        while (items.Count < itemCount)
         {
             GameObject newItem = (GameObject)Instantiate(Resources.Load("Item"));   //New item to spawn
             bool occupied = true;                                                   //True if spawn location is occupied
@@ -91,7 +92,7 @@ public class Manager : MonoBehaviour
                 //Check if location is occupied by other items.
                 if(occupied == false)
                 {
-                    for(int i = 0; i > items.Count; i++)
+                    for(int i = 0; i < items.Count; i++)
                     {
                         if (
                             newItem.GetComponent<Item>().xPos == items[i].GetComponent<Item>().xPos &&
@@ -104,6 +105,10 @@ public class Manager : MonoBehaviour
                 }
             }
 
+            newItem.transform.position = new Vector3(   //Fix for spawn flash
+                newItem.GetComponent<Item>().xPos,
+                .5f,
+                newItem.GetComponent<Item>().zPos);
             items.Add(newItem); //Add new item
         }
     }
