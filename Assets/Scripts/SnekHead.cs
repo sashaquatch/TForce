@@ -77,8 +77,9 @@ public class SnekHead : SnekPartMove
 			end = end.GetComponent<SnekPartMove>().PrevPart;
 			Destroy(end.GetComponent<SnekPartMove>().NextPart);
 		}
+
 		
-        Destroy (this.gameObject);
+		Application.LoadLevel(0);
 	}
 
     public void setEat()
