@@ -10,6 +10,9 @@ public class SnekHead : SnekPartMove
 	public string left;
 	public string right;
 	public string down;
+	public string fire;
+
+	public GameObject bullet;
 
     //Head reset
     public override void resetOffset()
@@ -41,7 +44,12 @@ public class SnekHead : SnekPartMove
                 break;
         }
 
-        //Key input
+        //Key input - shoot
+		if (Input.GetKey(fire)) {
+			FireBullet();
+		}
+
+		//Key input - turn
         if (Input.GetKey(up) && (dir != direction.south || nextPart == null))  //Cannot move backwards if there's more than one part
         {
             dir = direction.north;
@@ -77,7 +85,6 @@ public class SnekHead : SnekPartMove
 			end = end.GetComponent<SnekPartMove>().PrevPart;
 			Destroy(end.GetComponent<SnekPartMove>().NextPart);
 		}
-
 		
 		Application.LoadLevel(0);
 	}
@@ -86,4 +93,26 @@ public class SnekHead : SnekPartMove
     {
         goEat = true;
     }
+
+	//Spawns a bullet
+	void FireBullet ()
+	{
+		GameObject shot = (GameObject) GameObject.Instantiate (bullet, gameObject.transform.position, gameObject.transform.rotation);
+		switch (dir) {
+		case direction.north:
+			shot.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+			break;
+		case direction.east:
+			shot.transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
+			break;
+		case direction.south:
+			shot.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+			break;		
+		case direction.west:
+			shot.transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
+			break;
+		default:
+			break;
+		}
+	}
 }

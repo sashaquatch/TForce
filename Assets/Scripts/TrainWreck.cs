@@ -17,7 +17,7 @@ public class TrainWreck : MonoBehaviour
 
 	void OnTriggerEnter (Collider other)
     {
-		if (other.GetComponent<Collider>().tag == "TrainPiece")
+		if (other.GetComponent<Collider>().tag == "TrainPiece" || other.GetComponent<Collider>().tag == "Arena")
         {
 			this.gameObject.transform.parent.GetComponent<SnekHead>().KillTrain();
         }
