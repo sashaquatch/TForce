@@ -5,6 +5,9 @@ using System.Collections.Generic;   //To use list
 public class Manager : MonoBehaviour
 {
     public int itemCount;                   //Number of items.
+    public int xSize;                       //X size of map
+    public int zSize;                       //Z size of map
+    public bool easyMode;                   //Stops items from spawning on map edges
     private List<GameObject> items;
     private List<GameObject> snakeParts;    //Snake parts for spawning comparison
     private List<GameObject> snakeHeads;    //Snake heads for spawning comparison
@@ -59,8 +62,16 @@ public class Manager : MonoBehaviour
                 occupied = false;
 
                 //New location
-                newItem.GetComponent<Item>().xPos = Random.Range(0, 10);
-                newItem.GetComponent<Item>().zPos = Random.Range(0, 10);
+                if(easyMode)
+                {
+                    newItem.GetComponent<Item>().xPos = Random.Range(1, xSize - 1);
+                    newItem.GetComponent<Item>().zPos = Random.Range(1, zSize - 1);
+                }
+                else
+                {
+                    newItem.GetComponent<Item>().xPos = Random.Range(0, xSize);
+                    newItem.GetComponent<Item>().zPos = Random.Range(0, zSize);
+                }
 
                 //Check if location is occupied by snake parts.
                 for(int i = 0; i < snakeParts.Count; i++)
