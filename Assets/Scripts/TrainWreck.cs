@@ -23,10 +23,27 @@ public class TrainWreck : MonoBehaviour
 			this.gameObject.transform.parent.GetComponent<SnekHead>().KillTrain();
         }
 		//Trains pick up items
+
+		else if (other.GetComponent<Collider>().tag == "SpeedPup")
+		{
+			this.gameObject.transform.parent.GetComponent<SnekHead>().setEat();
+			this.gameObject.transform.parent.GetComponent<SnekHead>().setSpeedUp();
+			Destroy(other.transform.parent.gameObject);
+		}
+
+		else if (other.GetComponent<Collider>().tag == "MultEatPup")
+		{
+			this.gameObject.transform.parent.GetComponent<SnekHead>().setEat();
+			this.gameObject.transform.parent.GetComponent<SnekHead>().setMultEat();
+			Destroy(other.transform.parent.gameObject);
+		}
+
         else if (other.GetComponent<Collider>().tag == "Item")
         {
             this.gameObject.transform.parent.GetComponent<SnekHead>().setEat();
             Destroy(other.transform.parent.gameObject);
         }
+
+
 	}
 }

@@ -22,12 +22,34 @@ public class SnekHead : SnekPartMove
     //Head reset
     public override void resetOffset()
     {
+
+		if(speedUp)
+		{
+			speedUp = false;
+			GameObject end = this.gameObject;
+			end.GetComponent<SnekPartMove>().speed +=1;
+			while (end.GetComponent<SnekPartMove>().NextPart != null) 
+			{
+				end = end.GetComponent<SnekPartMove>().NextPart;
+				end.GetComponent<SnekPartMove>().speed +=1;
+
+			}
+		}
+
         //Eat testing
         if (goEat)
         {
             goEat = false;
             eat();
         }
+
+		if (multEat)
+		{
+			multEat = false;
+			eat();
+		}
+
+
 
 
 
@@ -105,6 +127,16 @@ public class SnekHead : SnekPartMove
     {
         goEat = true;
     }
+
+	public void setSpeedUp()
+	{
+		speedUp = true;
+	}
+
+	public void setMultEat()
+	{
+		multEat = true;
+	}
 
 	//Spawns a bullet
 	void FireBullet ()
