@@ -5,6 +5,8 @@ using System.Collections;
 public class SnekHead : SnekPartMove
 {
     public bool goEat;
+	public bool speedUp;
+	public bool multEat;
 
 	public string up;
 	public string left;
