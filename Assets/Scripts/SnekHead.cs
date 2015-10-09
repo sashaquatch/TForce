@@ -14,6 +14,9 @@ public class SnekHead : SnekPartMove
 
 	public GameObject bullet;
 
+	float curTime;
+	float fireDelay = 0.1f;
+
     //Head reset
     public override void resetOffset()
     {
@@ -23,6 +26,8 @@ public class SnekHead : SnekPartMove
             goEat = false;
             eat();
         }
+
+
 
         //Go to the last snake part and trigger pos-passing
         startFromLast();
@@ -44,9 +49,14 @@ public class SnekHead : SnekPartMove
                 break;
         }
 
+		curTime += Time.deltaTime;
         //Key input - shoot
 		if (Input.GetKey(fire)) {
-			FireBullet();
+			if (curTime >= fireDelay)
+			{
+				FireBullet();
+				curTime = 0.0f;
+			}
 		}
 
 		//Key input - turn

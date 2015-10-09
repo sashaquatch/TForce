@@ -24,6 +24,15 @@ public class BulletBehavior : MonoBehaviour {
 		if (other.GetComponent<Collider>().tag == "TrainPiece") {
 			//Recursive kill based on KillTrain
 			GameObject hit = other.gameObject.transform.parent.gameObject;
+			if (hit.GetComponent<SnekPartMove>().PrevPart == null) {
+				while (hit.GetComponent<SnekPartMove>().NextPart != null) {
+					hit = hit.GetComponent<SnekPartMove>().NextPart;
+					Destroy(hit.GetComponent<SnekPartMove>().PrevPart);
+				}
+				Destroy(hit);
+				//Destroy(this.gameObject);
+				Application.LoadLevel(0);
+			}
 			while (hit.GetComponent<SnekPartMove>().NextPart != null) {
 				hit = hit.GetComponent<SnekPartMove>().NextPart;
 				Destroy(hit.GetComponent<SnekPartMove>().PrevPart);
