@@ -3,6 +3,10 @@ using System.Collections;
 
 public class SnekPartMove : MonoBehaviour
 {
+	//used to determine powerup associate with this train piece
+	//0 = nothing 1 = speed boost 2 = bullet spread 3 = rapid fire 4 = shield cart 5 = mine cart 6 = crazy train
+	public int powerUp;
+
     //Enum of 90-degree directions
     public enum direction
     {
@@ -114,7 +118,7 @@ public class SnekPartMove : MonoBehaviour
     }
 
     //Generate a new snake part as the new tail
-    public void eat()
+    public void eat(int pUp)
     {
         if(nextPart == null)    //True when tail
         {
@@ -122,13 +126,14 @@ public class SnekPartMove : MonoBehaviour
             nextPart.GetComponent<SnekPartMove>().PrevPart = transform.gameObject;
             nextPart.GetComponent<SnekPartMove>().color = color;
             nextPart.GetComponent<SnekPartMove>().speed = speed;
+			nextPart.GetComponent<SnekPartMove>().powerUp = pUp;
             nextPart.GetComponent<SnekPartMove>().dir = dir;
             nextPart.GetComponent<SnekPartMove>().xPos = xPos;
             nextPart.GetComponent<SnekPartMove>().zPos = zPos;
         }
         else
         {
-            nextPart.GetComponent<SnekPartMove>().eat();
+            nextPart.GetComponent<SnekPartMove>().eat(pUp);
         }
         
     }

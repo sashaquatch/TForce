@@ -23,30 +23,42 @@ public class SnekHead : SnekPartMove
     public override void resetOffset()
     {
 
+
+        //Eat now takes an int to set variable that determines the car's associated powerup
+		//0 = nothing 1 = speed boost 2 = slow down 3 = bullet spread 4 = rapid fire 5 = shield cart 6 = mine cart 7 = crazy train
+        if (goEat)
+        {
+            goEat = false;
+
+			if(speedUp)
+			{
+				eat(1);
+			}
+			else{
+            	eat(0);
+			}
+        }
+
+		//boosts speed of train
 		if(speedUp)
 		{
 			speedUp = false;
+			//loops through train and boosts speed of each car
 			GameObject end = this.gameObject;
 			end.GetComponent<SnekPartMove>().speed +=1;
 			while (end.GetComponent<SnekPartMove>().NextPart != null) 
 			{
 				end = end.GetComponent<SnekPartMove>().NextPart;
 				end.GetComponent<SnekPartMove>().speed +=1;
-
+				
 			}
 		}
 
-        //Eat testing
-        if (goEat)
-        {
-            goEat = false;
-            eat();
-        }
-
+		//gives train a second piece from pUp
 		if (multEat)
 		{
 			multEat = false;
-			eat();
+			eat(0);
 		}
 
 
