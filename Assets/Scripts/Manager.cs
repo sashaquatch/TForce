@@ -25,11 +25,13 @@ public class Manager : MonoBehaviour
         items = new List<GameObject>();
         occupied = new List<int[]>(); 
         pups = new Dictionary<GameObject, int>();
+        powerups = new List<GameObject>();
 
         pups.Add(multPrefab, 50);
         pups.Add(speePrefab, 99);
 
         generateItems();
+        generatePups();
     }
 	
 	// Update is called once per frame
@@ -37,6 +39,8 @@ public class Manager : MonoBehaviour
     {
         cleanItems();
         generateItems();
+        cleanPups();
+        generatePups();
     }
 
     //Generate new items
@@ -53,22 +57,62 @@ public class Manager : MonoBehaviour
         {
             GameObject newItem = (GameObject)Instantiate(itemPrefab);   //New item to spawn
 
+            //Get a new coordinate and set the new item's position to it.
             int[] coor = getClearLocation();
-            
             newItem.GetComponent<Item>().xPos = coor[0];
             newItem.GetComponent<Item>().zPos = coor[1];
 
+            //Add the new position to the list of occupied locations
             occupied.Add(new int[2]);
             occupied[occupied.Count - 1][0] = coor[0];
             occupied[occupied.Count - 1][1] = coor[1];
 
-            newItem.transform.position = new Vector3(   //Fix for spawn flash
+            //Fix for spawn flash
+            newItem.transform.position = new Vector3(
                 newItem.GetComponent<Item>().xPos,
                 .5f, 
                 newItem.GetComponent<Item>().zPos);
-            items.Add(newItem); //Add new item
+
+            //Add new item
+            items.Add(newItem);
         }
     }
+
+    //Generate new powerups
+    private void generatePups()
+    {
+        //If there less than 3 powerups, fill new spawning comparison lists.
+        if (powerups.Count < powerupCount)
+        {
+            fillOccupiedLocations();
+        }
+
+        //While there are less than 3 powerups, generate a new powerup
+        while (powerups.Count < powerupCount)
+        {
+            GameObject newPup = (GameObject)Instantiate(speePrefab);   //New powerup to spawn
+
+            //Get a new coordinate and set the new powerup's position to it.
+            int[] coor = getClearLocation();
+            newPup.GetComponent<Item>().xPos = coor[0];
+            newPup.GetComponent<Item>().zPos = coor[1];
+
+            //Add the new position to the list of occupied locations
+            occupied.Add(new int[2]);
+            occupied[occupied.Count - 1][0] = coor[0];
+            occupied[occupied.Count - 1][1] = coor[1];
+
+            //Fix for spawn flash
+            newPup.transform.position = new Vector3(
+                newPup.GetComponent<Item>().xPos,
+                .5f,
+                newPup.GetComponent<Item>().zPos);
+
+            //Add new powerup
+            powerups.Add(newPup);
+        }
+    }
+
 
     //Fills a list of occupied locations
     private void fillOccupiedLocations()
@@ -152,6 +196,16 @@ public class Manager : MonoBehaviour
         {
             if (items[i] == null)
                 items.RemoveAt(i);
+        }
+    }
+
+    //Remove all null-missing items.
+    private void cleanPups()
+    {
+        for (int i = 0; i < powerups.Count; i++)
+        {
+            if (powerups[i] == null)
+                powerups.RemoveAt(i);
         }
     }
 }
