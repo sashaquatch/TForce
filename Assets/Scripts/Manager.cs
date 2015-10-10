@@ -4,32 +4,38 @@ using System.Collections.Generic;   //To use list
 
 public class Manager : MonoBehaviour
 {
-    public int itemCount;                       //Number of items.
-    public int powerupCount;                    //Number of powerups.
-    public int xSize;                           //X size of map
-    public int zSize;                           //Z size of map
-    public bool easyMode;                       //Stops items from spawning on map edges
+    public int itemCount;                               //Number of items.
+    public int powerupCount;                            //Number of powerups.
+    public int xSize;                                   //X size of map
+    public int zSize;                                   //Z size of map
+    public bool easyMode;                               //Stops items from spawning on map edges
 
-    public GameObject itemPrefab;               //Prefab for Item
-    public GameObject multPrefab;               //Prefab for Multiple eat powerup
-    public GameObject speePrefab;               //Prefan for Speed powerup
+    //--> !ADD NEW POWERUPS HERE! <--
+    public GameObject itemPrefab;                       //Prefab for Item
+    public GameObject multPrefab;                       //Prefab for Multiple eat powerup
+    public GameObject speePrefab;                       //Prefab for Speed powerup
+    public GameObject rapiPrefab;                       //Prefab for Rapid powerup
 
-    private List<int[]> occupied;               //List of occupied locations
-    private List<GameObject> items;             //List of existing items
-    private Dictionary<GameObject, int> pups;   //Dictionary of possible powerups
-    private List<GameObject> powerups;          //List of existing powerups
+    private List<int[]> occupied;                       //List of occupied locations
+    private List<GameObject> items;                     //List of existing items
+    private Dictionary<GameObject, int> pupDictionary;  //Dictionary of possible powerups. POWERUP GAMEOBJECT, RANDOM GENERATOR VALUE
+    private List<GameObject> powerups;                  //List of existing powerups
 
 	// Use this for initialization
 	void Start ()
     {
+        //Lists and dictionaries
         items = new List<GameObject>();
         occupied = new List<int[]>(); 
-        pups = new Dictionary<GameObject, int>();
+        pupDictionary = new Dictionary<GameObject, int>();
         powerups = new List<GameObject>();
 
-        pups.Add(multPrefab, 50);
-        pups.Add(speePrefab, 99);
+        //--> !ADD NEW POWERUPS TO DICTIONARY HERE! <--
+        pupDictionary.Add(multPrefab, 50);
+        pupDictionary.Add(speePrefab, 75);
+        pupDictionary.Add(rapiPrefab, 100);
 
+        //Initial generation
         generateItems();
         generatePups();
     }
@@ -90,7 +96,17 @@ public class Manager : MonoBehaviour
         //While there are less than 3 powerups, generate a new powerup
         while (powerups.Count < powerupCount)
         {
-            GameObject newPup = (GameObject)Instantiate(speePrefab);   //New powerup to spawn
+            float pupRand = Random.Range(0, 100);
+            GameObject newPup = null;   //New powerup to spawn
+
+            foreach (KeyValuePair<GameObject, int> pair in pupDictionary)
+            {
+                if(pair.Value > pupRand)
+                {
+                    newPup = (GameObject)Instantiate(pair.Key);
+                    break;
+                }
+            }
 
             //Get a new coordinate and set the new powerup's position to it.
             int[] coor = getClearLocation();
