@@ -3,6 +3,10 @@ using System.Collections;
 
 public class SnekPartMove : MonoBehaviour
 {
+	//used to determine powerup associate with this train piece
+	//0 = nothing 1 = speed boost 2 = slow down 3 = bullet spread 4 = rapid fire 5 = shield cart 6 = mine cart 7 = crazy train
+	public int powerUp;
+
     //Enum of 90-degree directions
     public enum direction
     {
@@ -114,7 +118,7 @@ public class SnekPartMove : MonoBehaviour
     }
 
     //Generate a new snake part as the new tail
-    public void eat()
+    public void eat(int pUp)
     {
         if(nextPart == null)    //True when tail
         {
@@ -122,14 +126,61 @@ public class SnekPartMove : MonoBehaviour
             nextPart.GetComponent<SnekPartMove>().PrevPart = transform.gameObject;
             nextPart.GetComponent<SnekPartMove>().color = color;
             nextPart.GetComponent<SnekPartMove>().speed = speed;
+			nextPart.GetComponent<SnekPartMove>().powerUp = pUp;
             nextPart.GetComponent<SnekPartMove>().dir = dir;
             nextPart.GetComponent<SnekPartMove>().xPos = xPos;
             nextPart.GetComponent<SnekPartMove>().zPos = zPos;
         }
         else
         {
-            nextPart.GetComponent<SnekPartMove>().eat();
+            nextPart.GetComponent<SnekPartMove>().eat(pUp);
         }
         
     }
+
+	//0 = nothing 1 = speed boost 2 = slow down 3 = bullet spread 4 = rapid fire 5 = shield cart 6 = mine cart 7 = crazy train
+	public void OnDestroy()
+	{
+		//lose speed boost
+		if (powerUp == 1) 
+		{
+			GameObject otherPart = prevPart;
+			while(otherPart != null)
+			{
+				otherPart.GetComponent<SnekPartMove>().speed -= 1;
+				otherPart = otherPart.GetComponent<SnekPartMove>().PrevPart;
+			}
+		}
+
+		// lose slow down
+		if (powerUp == 2) 
+		{
+			GameObject otherPart = prevPart;
+			while(otherPart != null)
+			{
+				otherPart.GetComponent<SnekPartMove>().speed += 1;
+				otherPart = otherPart.GetComponent<SnekPartMove>().PrevPart;
+			}
+		}
+
+		//lose bullet spread
+		if (powerUp == 3) 
+		{
+		}
+
+		//lose rapid fire
+		if (powerUp == 4) 
+		{
+		}
+		
+		//lose mines
+		if (powerUp == 6) 
+		{
+		}
+
+		//lose craziness?
+		if (powerUp == 7) 
+		{
+		}
+	}
 }

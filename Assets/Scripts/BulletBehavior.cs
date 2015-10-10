@@ -22,20 +22,19 @@ public class BulletBehavior : MonoBehaviour {
 	{
 		//On train hit
 		if (other.GetComponent<Collider>().tag == "TrainPiece") {
+
 			//Recursive kill based on KillTrain
 			GameObject hit = other.gameObject.transform.parent.gameObject;
+			GameObject spot = hit;
 			if (hit.GetComponent<SnekPartMove>().PrevPart == null) {
-				while (hit.GetComponent<SnekPartMove>().NextPart != null) {
-					hit = hit.GetComponent<SnekPartMove>().NextPart;
-					Destroy(hit.GetComponent<SnekPartMove>().PrevPart);
-				}
-				Destroy(hit);
-				//Destroy(this.gameObject);
-				Application.LoadLevel(0);
+				hit.GetComponent<SnekHead>().KillTrain();
 			}
-			while (hit.GetComponent<SnekPartMove>().NextPart != null) {
-				hit = hit.GetComponent<SnekPartMove>().NextPart;
-				Destroy(hit.GetComponent<SnekPartMove>().PrevPart);
+			while (spot.GetComponent<SnekPartMove>().NextPart != null) {
+				spot = spot.GetComponent<SnekPartMove>().NextPart;
+			}
+			while (spot != hit) {
+				spot = spot.GetComponent<SnekPartMove>().PrevPart;
+				Destroy(spot.GetComponent<SnekPartMove>().NextPart);
 			}
 			Destroy(hit);
 			Destroy(this.gameObject);
