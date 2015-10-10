@@ -8,9 +8,15 @@ public class Manager : MonoBehaviour
     public int xSize;                       //X size of map
     public int zSize;                       //Z size of map
     public bool easyMode;                   //Stops items from spawning on map edges
+
+    public GameObject itemPrefab;
+    public GameObject multPrefab;
+    public GameObject speePrefab;
+
     private List<GameObject> items;
     private List<GameObject> snakeParts;    //Snake parts for spawning comparison
     private List<GameObject> snakeHeads;    //Snake heads for spawning comparison
+    private Dictionary<GameObject, int> pups;
 
 	// Use this for initialization
 	void Start ()
@@ -18,6 +24,11 @@ public class Manager : MonoBehaviour
         items = new List<GameObject>();
         snakeParts = new List<GameObject>();
         snakeHeads = new List<GameObject>();
+        pups = new Dictionary<GameObject, int>();
+
+        pups.Add(multPrefab, 50);
+        pups.Add(speePrefab, 99);
+
         generateItems();
     }
 	
@@ -29,7 +40,7 @@ public class Manager : MonoBehaviour
     }
 
     //Generate new items
-    void generateItems()
+    private void generateItems()
     {
         //If there less than 3 items, fill new spawning comparison lists.
         if (items.Count < itemCount)
@@ -53,68 +64,13 @@ public class Manager : MonoBehaviour
         //While there are less than 3 items, generate a new item
         while (items.Count < itemCount)
         {
-            GameObject newItem = (GameObject)Instantiate(Resources.Load("Item"));   //New item to spawn
-            bool occupied = true;                                                   //True if spawn location is occupied
+            GameObject newItem = (GameObject)Instantiate(itemPrefab);   //New item to spawn
+            bool occupied = true;
 
-            //Loop spawn occupation check
-            while (occupied)
-            {
-                occupied = false;
-
-                //New location
-                if(easyMode)
-                {
-                    newItem.GetComponent<Item>().xPos = Random.Range(1, xSize - 1);
-                    newItem.GetComponent<Item>().zPos = Random.Range(1, zSize - 1);
-                }
-                else
-                {
-                    newItem.GetComponent<Item>().xPos = Random.Range(0, xSize);
-                    newItem.GetComponent<Item>().zPos = Random.Range(0, zSize);
-                }
-
-                //Check if location is occupied by snake parts.
-                for(int i = 0; i < snakeParts.Count; i++)
-                {
-                    if(
-                        newItem.GetComponent<Item>().xPos == snakeParts[i].GetComponent<SnekPartMove>().xPos &&
-                        newItem.GetComponent<Item>().zPos == snakeParts[i].GetComponent<SnekPartMove>().zPos)
-                    {
-                        occupied = true;
-                        break;
-                    }
-                }
-
-                //Check if location is occupied by snake heads.
-                if(occupied == false)
-                {
-                    for (int i = 0; i < snakeHeads.Count; i++)
-                    {
-                        if (
-                            newItem.GetComponent<Item>().xPos == snakeHeads[i].GetComponent<SnekHead>().xPos &&
-                            newItem.GetComponent<Item>().zPos == snakeHeads[i].GetComponent<SnekHead>().zPos)
-                        {
-                            occupied = true;
-                            break;
-                        }
-                    }
-                }
-
-                //Check if location is occupied by other items.
-                if(occupied == false)
-                {
-                    for(int i = 0; i < items.Count; i++)
-                    {
-                        if (
-                            newItem.GetComponent<Item>().xPos == items[i].GetComponent<Item>().xPos &&
-                            newItem.GetComponent<Item>().zPos == items[i].GetComponent<Item>().zPos)
-                        {
-                            occupied = true;
-                            break;
-                        }
-                    }
-                }
-            }
+            int[] coor = getClearLocation();
+            
+            newItem.GetComponent<Item>().xPos = coor[0];
+            newItem.GetComponent<Item>().zPos = coor[1];
 
             newItem.transform.position = new Vector3(   //Fix for spawn flash
                 newItem.GetComponent<Item>().xPos,
@@ -124,8 +80,80 @@ public class Manager : MonoBehaviour
         }
     }
 
+    //Gets an unoccupied location on the grid
+    private int[] getClearLocation()
+    {
+        //New coordinates
+        int[] coor = new int[2];
+
+        //True if spawn location is occupied
+        bool occupied = true;
+
+        //Loop spawn occupation check
+        while (occupied)
+        {
+            occupied = false;
+
+            //New location
+            if (easyMode)
+            {
+                coor[0] = Random.Range(1, xSize - 1);
+                coor[1] = Random.Range(1, zSize - 1);
+            }
+            else
+            {
+                coor[0] = Random.Range(0, xSize);
+                coor[1] = Random.Range(0, zSize);
+            }
+
+            //Check if location is occupied by snake parts.
+            for (int i = 0; i < snakeParts.Count; i++)
+            {
+                if (
+                    coor[0] == snakeParts[i].GetComponent<SnekPartMove>().xPos &&
+                    coor[1] == snakeParts[i].GetComponent<SnekPartMove>().zPos)
+                {
+                    occupied = true;
+                    break;
+                }
+            }
+
+            //Check if location is occupied by snake heads.
+            if (occupied == false)
+            {
+                for (int i = 0; i < snakeHeads.Count; i++)
+                {
+                    if (
+                        coor[0] == snakeHeads[i].GetComponent<SnekHead>().xPos &&
+                        coor[1] == snakeHeads[i].GetComponent<SnekHead>().zPos)
+                    {
+                        occupied = true;
+                        break;
+                    }
+                }
+            }
+
+            //Check if location is occupied by other items.
+            if (occupied == false)
+            {
+                for (int i = 0; i < items.Count; i++)
+                {
+                    if (
+                        coor[0] == items[i].GetComponent<Item>().xPos &&
+                        coor[1] == items[i].GetComponent<Item>().zPos)
+                    {
+                        occupied = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return coor;
+    }
+
     //Remove all null-missing items.
-    void cleanItems()
+    private void cleanItems()
     {
         for (int i = 0; i < items.Count; i++)
         {
