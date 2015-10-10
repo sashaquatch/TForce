@@ -7,6 +7,7 @@ public class SnekHead : SnekPartMove
     public bool goEat;
 	public bool speedUp;
 	public bool multEat;
+	public bool rapid;
 
 	public string up;
 	public string left;
@@ -17,7 +18,7 @@ public class SnekHead : SnekPartMove
 	public GameObject bullet;
 
 	float curTime;
-	float fireDelay = 0.1f;
+	public float fireDelay = 0.1f;
 
     //Head reset
     public override void resetOffset()
@@ -33,6 +34,9 @@ public class SnekHead : SnekPartMove
 			if(speedUp)
 			{
 				eat(1);
+			}
+			else if (rapid) {
+				eat (4);
 			}
 			else{
             	eat(0);
@@ -61,7 +65,11 @@ public class SnekHead : SnekPartMove
 			eat(0);
 		}
 
-
+		//Decreases delay between shots
+		if (rapid) {
+			rapid = false;
+			fireDelay = fireDelay / 2.0f;
+		}
 
 
 
@@ -148,6 +156,11 @@ public class SnekHead : SnekPartMove
 	public void setMultEat()
 	{
 		multEat = true;
+	}
+
+	public void setRapid()
+	{
+		rapid = true;
 	}
 
 	//Spawns a bullet
