@@ -4,26 +4,26 @@ using System.Collections.Generic;   //To use list
 
 public class Manager : MonoBehaviour
 {
-    public int itemCount;                   //Number of items.
-    public int xSize;                       //X size of map
-    public int zSize;                       //Z size of map
-    public bool easyMode;                   //Stops items from spawning on map edges
+    public int itemCount;                       //Number of items.
+    public int powerupCount;                    //Number of powerups.
+    public int xSize;                           //X size of map
+    public int zSize;                           //Z size of map
+    public bool easyMode;                       //Stops items from spawning on map edges
 
-    public GameObject itemPrefab;
-    public GameObject multPrefab;
-    public GameObject speePrefab;
+    public GameObject itemPrefab;               //Prefab for Item
+    public GameObject multPrefab;               //Prefab for Multiple eat powerup
+    public GameObject speePrefab;               //Prefan for Speed powerup
 
-    private List<GameObject> items;
-    private List<GameObject> snakeParts;    //Snake parts for spawning comparison
-    private List<GameObject> snakeHeads;    //Snake heads for spawning comparison
-    private Dictionary<GameObject, int> pups;
+    private List<int[]> occupied;               //List of occupied locations
+    private List<GameObject> items;             //List of existing items
+    private Dictionary<GameObject, int> pups;   //Dictionary of possible powerups
+    private List<GameObject> powerups;          //List of existing powerups
 
 	// Use this for initialization
 	void Start ()
     {
         items = new List<GameObject>();
-        snakeParts = new List<GameObject>();
-        snakeHeads = new List<GameObject>();
+        occupied = new List<int[]>(); 
         pups = new Dictionary<GameObject, int>();
 
         pups.Add(multPrefab, 50);
@@ -45,41 +45,64 @@ public class Manager : MonoBehaviour
         //If there less than 3 items, fill new spawning comparison lists.
         if (items.Count < itemCount)
         {
-            snakeParts = new List<GameObject>();
-            snakeHeads = new List<GameObject>();
-            GameObject[] allObjects = (GameObject[])FindObjectsOfType(typeof(GameObject));
-            for(int i = 0; i < allObjects.Length; i++)
-            {
-                if(allObjects[i].GetComponent<SnekPartMove>() != null)
-                {
-                    snakeParts.Add(allObjects[i]);
-                }
-                if(allObjects[i].GetComponent<SnekHead>() != null)
-                {
-                    snakeHeads.Add(allObjects[i]);
-                }
-            }
+            fillOccupiedLocations();
         }
 
         //While there are less than 3 items, generate a new item
         while (items.Count < itemCount)
         {
             GameObject newItem = (GameObject)Instantiate(itemPrefab);   //New item to spawn
-            bool occupied = true;
 
             int[] coor = getClearLocation();
             
             newItem.GetComponent<Item>().xPos = coor[0];
             newItem.GetComponent<Item>().zPos = coor[1];
 
+            occupied.Add(new int[2]);
+            occupied[occupied.Count - 1][0] = coor[0];
+            occupied[occupied.Count - 1][1] = coor[1];
+
             newItem.transform.position = new Vector3(   //Fix for spawn flash
                 newItem.GetComponent<Item>().xPos,
-                .5f,
+                .5f, 
                 newItem.GetComponent<Item>().zPos);
             items.Add(newItem); //Add new item
         }
     }
 
+    //Fills a list of occupied locations
+    private void fillOccupiedLocations()
+    {
+        occupied = new List<int[]>();
+        GameObject[] allObjects = (GameObject[])FindObjectsOfType(typeof(GameObject)); 
+        for (int i = 0; i < allObjects.Length; i++)
+        {
+            //If object is a snake part, add its position to occupied
+            if(allObjects[i].GetComponent<SnekPartMove>() != null)
+            {
+                occupied.Add(new int[2]);
+                occupied[occupied.Count - 1][0] = allObjects[i].GetComponent<SnekPartMove>().xPos;
+                occupied[occupied.Count - 1][1] = allObjects[i].GetComponent<SnekPartMove>().zPos;
+            }
+
+            //If object is a snake head, add its position to occupied
+            else if (allObjects[i].GetComponent<SnekHead>() != null)
+            {
+                occupied.Add(new int[2]);
+                occupied[occupied.Count - 1][0] = allObjects[i].GetComponent<SnekHead>().xPos;
+                occupied[occupied.Count - 1][1] = allObjects[i].GetComponent<SnekHead>().zPos;
+            }
+
+            //If object is an item, add its position to occupied
+            else if (allObjects[i].GetComponent<Item>() != null)
+            {
+                occupied.Add(new int[2]);
+                occupied[occupied.Count - 1][0] = allObjects[i].GetComponent<Item>().xPos;
+                occupied[occupied.Count - 1][1] = allObjects[i].GetComponent<Item>().zPos;
+            }
+        }
+    }
+      
     //Gets an unoccupied location on the grid
     private int[] getClearLocation()
     {
@@ -87,12 +110,12 @@ public class Manager : MonoBehaviour
         int[] coor = new int[2];
 
         //True if spawn location is occupied
-        bool occupied = true;
+        bool isOccupied = true;
 
         //Loop spawn occupation check
-        while (occupied)
+        while (isOccupied)
         {
-            occupied = false;
+            isOccupied = false;
 
             //New location
             if (easyMode)
@@ -107,44 +130,14 @@ public class Manager : MonoBehaviour
             }
 
             //Check if location is occupied by snake parts.
-            for (int i = 0; i < snakeParts.Count; i++)
+            for (int i = 0; i < occupied.Count; i++)
             {
                 if (
-                    coor[0] == snakeParts[i].GetComponent<SnekPartMove>().xPos &&
-                    coor[1] == snakeParts[i].GetComponent<SnekPartMove>().zPos)
+                    coor[0] == occupied[i][0] &&
+                    coor[1] == occupied[i][1])
                 {
-                    occupied = true;
+                    isOccupied = true;
                     break;
-                }
-            }
-
-            //Check if location is occupied by snake heads.
-            if (occupied == false)
-            {
-                for (int i = 0; i < snakeHeads.Count; i++)
-                {
-                    if (
-                        coor[0] == snakeHeads[i].GetComponent<SnekHead>().xPos &&
-                        coor[1] == snakeHeads[i].GetComponent<SnekHead>().zPos)
-                    {
-                        occupied = true;
-                        break;
-                    }
-                }
-            }
-
-            //Check if location is occupied by other items.
-            if (occupied == false)
-            {
-                for (int i = 0; i < items.Count; i++)
-                {
-                    if (
-                        coor[0] == items[i].GetComponent<Item>().xPos &&
-                        coor[1] == items[i].GetComponent<Item>().zPos)
-                    {
-                        occupied = true;
-                        break;
-                    }
                 }
             }
         }
