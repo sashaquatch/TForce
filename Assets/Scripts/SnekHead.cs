@@ -8,6 +8,7 @@ public class SnekHead : SnekPartMove
 	public bool speedUp;
 	public bool multEat;
 	public bool rapid;
+	public bool crazy;
 
 	public string up;
 	public string left;
@@ -57,6 +58,12 @@ public class SnekHead : SnekPartMove
 			{
 				eat(1);
 			}
+
+			else if(crazy)
+			{
+				eat(7);
+			}
+
 			else if (rapid) {
 				eat (4);
 			}
@@ -91,6 +98,11 @@ public class SnekHead : SnekPartMove
 		if (rapid) {
 			rapid = false;
 			fireDelay = fireDelay / 2.0f;
+		}
+
+		if (crazy) 
+		{
+
 		}
 
 
@@ -183,6 +195,11 @@ public class SnekHead : SnekPartMove
 	public void setRapid()
 	{
 		rapid = true;
+	}
+
+	public void setCrazy()
+	{
+		crazy = true;
 	}
 
 	//Spawns a bullet
