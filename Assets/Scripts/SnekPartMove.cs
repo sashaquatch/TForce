@@ -175,26 +175,26 @@ public class SnekPartMove : MonoBehaviour
 		//lose bullet spread
 		if (powerUp == 3) 
 		{
-			/*GameObject otherPart = prevPart;
-			while(otherPart != null && otherPart.GetComponent<SnekPartMove>().powerUp != 3)
+			GameObject otherPart = prevPart;
+			while(otherPart.GetComponent<SnekPartMove>().PrevPart != null && otherPart.GetComponent<SnekPartMove>().powerUp != 3)
 			{
-				otherPart = prevPart;
+				otherPart = otherPart.GetComponent<SnekPartMove>().PrevPart;
 			}
 			if (otherPart.GetComponent<SnekPartMove>().powerUp != 3) {
-				otherPart.GetComponent<SnekHead>().multShot = false;
-			}*/
+				otherPart.GetComponent<SnekHead>().loseMultShot();
+			}
 		}
 
 		//lose rapid fire
 		if (powerUp == 4) 
 		{
-			/*GameObject otherPart = prevPart;
-			while(otherPart != null)
+			GameObject otherPart = prevPart;
+			while(otherPart.GetComponent<SnekPartMove>().PrevPart != null)
 			{
-				otherPart = prevPart;
+				otherPart = otherPart.GetComponent<SnekPartMove>().PrevPart;
 			}
 			otherPart.GetComponent<SnekHead>().fireDelay = otherPart.GetComponent<SnekHead>().fireDelay * 2.0f;
-			*/
+
 		}
 		
 		//lose mines

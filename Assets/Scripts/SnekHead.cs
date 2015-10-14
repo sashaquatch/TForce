@@ -8,8 +8,8 @@ public class SnekHead : SnekPartMove
 	public bool speedUp;
 	public bool multEat;
 	public bool rapid;
-	public bool multShot;
-	public bool crazy;
+	public bool multShotEat;
+	public bool crazy; 
 
 	public string up;
 	public string left;
@@ -21,6 +21,7 @@ public class SnekHead : SnekPartMove
 
 	float curTime;
 	public float fireDelay = 0.1f;
+	public bool multShot;
 
     private direction bufferedDir = direction.north;
 
@@ -67,6 +68,10 @@ public class SnekHead : SnekPartMove
 
 			else if (rapid) {
 				eat (4);
+			}
+			else if (multShotEat) {
+				multShotEat = false;
+				eat (3);
 			}
 			else{
             	eat(0);
@@ -199,11 +204,17 @@ public class SnekHead : SnekPartMove
 	public void setMultShot()
 	{
 		multShot = true;
+		multShotEat = true;
 	}
 
 	public void setCrazy()
 	{
 		crazy = true;
+	}
+
+	public void loseMultShot()
+	{
+		multShot = false;
 	}
 
 	//Spawns a bullet
