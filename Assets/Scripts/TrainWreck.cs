@@ -44,6 +44,11 @@ public class TrainWreck : MonoBehaviour
 			this.gameObject.transform.parent.GetComponent<SnekHead>().setRapid();
 			Destroy(other.transform.parent.gameObject);
 		}
+		else if (other.GetComponent<Collider>().tag == "MultShotPup") {
+			this.gameObject.transform.parent.GetComponent<SnekHead>().setEat();
+			this.gameObject.transform.parent.GetComponent<SnekHead>().setMultShot();
+			Destroy(other.transform.parent.gameObject);
+		}
 
         else if (other.GetComponent<Collider>().tag == "Item")
         {

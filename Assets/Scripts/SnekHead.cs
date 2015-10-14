@@ -8,6 +8,7 @@ public class SnekHead : SnekPartMove
 	public bool speedUp;
 	public bool multEat;
 	public bool rapid;
+	public bool multShot;
 
 	public string up;
 	public string left;
@@ -162,6 +163,10 @@ public class SnekHead : SnekPartMove
 	{
 		rapid = true;
 	}
+	public void setMultShot()
+	{
+		multShot = true;
+	}
 
 	//Spawns a bullet
 	void FireBullet ()
@@ -182,6 +187,12 @@ public class SnekHead : SnekPartMove
 			break;
 		default:
 			break;
+		}
+		if (multShot == true) {
+			GameObject shotL = (GameObject) GameObject.Instantiate (bullet, shot.transform.position, shot.transform.rotation);
+			GameObject shotR = (GameObject) GameObject.Instantiate (bullet, shot.transform.position, shot.transform.rotation);
+			shotL.transform.Rotate(new Vector3(0.0f, 30.0f, 0.0f));
+			shotR.transform.Rotate(new Vector3(0.0f, -30.0f, 0.0f));
 		}
 	}
 }
