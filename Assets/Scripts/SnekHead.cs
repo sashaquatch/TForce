@@ -9,6 +9,7 @@ public class SnekHead : SnekPartMove
 	public bool multEat;
 	public bool rapid;
 	public bool multShotEat;
+	public bool mineEat;
 	public bool crazy; 
 
 	public string up;
@@ -22,6 +23,7 @@ public class SnekHead : SnekPartMove
 	float curTime;
 	public float fireDelay = 0.1f;
 	public bool multShot;
+	public bool mine;
 
     private direction bufferedDir = direction.north;
 
@@ -65,12 +67,13 @@ public class SnekHead : SnekPartMove
 			{
 				eat(7);
 			}
-
+			else if (mine) {
+				eat (6);
+			}
 			else if (rapid) {
 				eat (4);
 			}
 			else if (multShotEat) {
-				multShotEat = false;
 				eat (3);
 			}
 			else{
@@ -104,6 +107,14 @@ public class SnekHead : SnekPartMove
 		if (rapid) {
 			rapid = false;
 			fireDelay = fireDelay / 2.0f;
+		}
+
+		if (mineEat) {
+			mineEat = false;
+		}
+
+		if (multShotEat) {
+			multShotEat = false;
 		}
 
 		if (crazy) 
@@ -217,6 +228,11 @@ public class SnekHead : SnekPartMove
 		multShot = false;
 	}
 
+	public void setMine()
+	{
+		mine = true;
+		mineEat = true;
+	}
 	//Spawns a bullet
 	void FireBullet ()
 	{
@@ -242,6 +258,17 @@ public class SnekHead : SnekPartMove
 			GameObject shotR = (GameObject) GameObject.Instantiate (bullet, shot.transform.position, shot.transform.rotation);
 			shotL.transform.Rotate(new Vector3(0.0f, 30.0f, 0.0f));
 			shotR.transform.Rotate(new Vector3(0.0f, -30.0f, 0.0f));
+		}
+		if (mine) {
+			GameObject end = NextPart;
+			while (end.GetComponent<SnekPartMove>().NextPart != null) {
+				end = end.GetComponent<SnekPartMove>().NextPart;
+			}
+			//Aim bullet backwards so it spawns behind train
+			Transform rot = end.transform.GetChild(0).transform;
+			GameObject mined = (GameObject) GameObject.Instantiate (bullet, end.transform.position, rot.rotation);
+			mined.transform.RotateAround(mined.transform.position, Vector3.up, 180.0f);
+			mined.GetComponent<BulletBehavior>().speed = 0.0f;
 		}
 	}
 }
