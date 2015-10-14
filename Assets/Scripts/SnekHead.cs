@@ -8,11 +8,8 @@ public class SnekHead : SnekPartMove
 	public bool speedUp;
 	public bool multEat;
 	public bool rapid;
-<<<<<<< HEAD
 	public bool multShot;
-=======
 	public bool crazy;
->>>>>>> eec79cb18d7f02c642efe99b9a8395f8597a0c51
 
 	public string up;
 	public string left;
@@ -108,8 +105,7 @@ public class SnekHead : SnekPartMove
 		{
 
 		}
-
-
+		
 
         //Go to the last snake part and trigger pos-passing
         startFromLast();
