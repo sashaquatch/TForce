@@ -56,6 +56,9 @@ public class SnekPartMove : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        //Special update for child classes
+        specialUpdate();
+
         //If offset is greater than 1 (meaning when the part reached the next grid space), reset back to 0 and peform head reset sequence.
         offset += speed * Time.deltaTime;
         if(offset > 1)
@@ -85,6 +88,18 @@ public class SnekPartMove : MonoBehaviour
         }
     }
 
+    //Does nothing for any non-head parts.
+    public virtual void specialUpdate()
+    {
+
+    }
+
+    //Does nothing for any non-head parts.
+    public virtual void resetOffset()
+    {
+
+    }
+
     //Go from head-to-tail, trigger position passing if tail.
     public void startFromLast()
     {
@@ -109,12 +124,6 @@ public class SnekPartMove : MonoBehaviour
 
             prevPart.GetComponent<SnekPartMove>().posPass();
         }
-    }
-
-    //Does nothing for any non-head parts.
-    public virtual void resetOffset()
-    {
-
     }
 
     //Generate a new snake part as the new tail

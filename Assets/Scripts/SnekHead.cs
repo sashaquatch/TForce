@@ -8,7 +8,11 @@ public class SnekHead : SnekPartMove
 	public bool speedUp;
 	public bool multEat;
 	public bool rapid;
+<<<<<<< HEAD
 	public bool multShot;
+=======
+	public bool crazy;
+>>>>>>> eec79cb18d7f02c642efe99b9a8395f8597a0c51
 
 	public string up;
 	public string left;
@@ -21,11 +25,33 @@ public class SnekHead : SnekPartMove
 	float curTime;
 	public float fireDelay = 0.1f;
 
+    private direction bufferedDir = direction.north;
+
+    //Inherited special update
+    public override void specialUpdate()
+    {
+        //Key input - turn with buffer
+        if (Input.GetKey(up) && (dir != direction.south || nextPart == null))  //Cannot move backwards if there's more than one part
+        {
+            bufferedDir = direction.north;
+        }
+        else if (Input.GetKey(right) && (dir != direction.west || nextPart == null))
+        {
+            bufferedDir = direction.east;
+        }
+        else if (Input.GetKey(down) && (dir != direction.north || nextPart == null))
+        {
+            bufferedDir = direction.south;
+        }
+        else if (Input.GetKey(left) && (dir != direction.east || nextPart == null))
+        {
+            bufferedDir = direction.west;
+        }
+    }
+
     //Head reset
     public override void resetOffset()
     {
-
-
         //Eat now takes an int to set variable that determines the car's associated powerup
 		//0 = nothing 1 = speed boost 2 = slow down 3 = bullet spread 4 = rapid fire 5 = shield cart 6 = mine cart 7 = crazy train
         if (goEat)
@@ -36,6 +62,12 @@ public class SnekHead : SnekPartMove
 			{
 				eat(1);
 			}
+
+			else if(crazy)
+			{
+				eat(7);
+			}
+
 			else if (rapid) {
 				eat (4);
 			}
@@ -72,6 +104,11 @@ public class SnekHead : SnekPartMove
 			fireDelay = fireDelay / 2.0f;
 		}
 
+		if (crazy) 
+		{
+
+		}
+
 
 
         //Go to the last snake part and trigger pos-passing
@@ -104,23 +141,23 @@ public class SnekHead : SnekPartMove
 			}
 		}
 
-		//Key input - turn
-        if (Input.GetKey(up) && (dir != direction.south || nextPart == null))  //Cannot move backwards if there's more than one part
+		//Key input from buffer
+        if (bufferedDir == direction.north)  //Cannot move backwards if there's more than one part
         {
             dir = direction.north;
 			this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
         }
-        else if (Input.GetKey(right) && (dir != direction.west || nextPart == null))
+        else if (bufferedDir == direction.east)
         {
             dir = direction.east;
 			this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
         }
-        else if (Input.GetKey(down) && (dir != direction.north || nextPart == null))
+        else if (bufferedDir == direction.south)
         {
             dir = direction.south;
 			this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
         }
-        else if (Input.GetKey(left) && (dir != direction.east || nextPart == null))
+        else if (bufferedDir == direction.west)
         {
             dir = direction.west;
 			this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
@@ -166,6 +203,11 @@ public class SnekHead : SnekPartMove
 	public void setMultShot()
 	{
 		multShot = true;
+	}
+
+	public void setCrazy()
+	{
+		crazy = true;
 	}
 
 	//Spawns a bullet
