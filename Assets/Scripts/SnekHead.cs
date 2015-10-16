@@ -45,31 +45,19 @@ public class SnekHead : SnekPartMove
             directions.Remove(direction.west);
 
         //Key input - turn with buffer
-        if (                                            //Cannot move backwards if there's more than one part
-            Input.GetKey(up) &&
-            (dir != direction.south || nextPart == null) &&
-            !directions.Contains(direction.north))
+        if (Input.GetKey(up) && !directions.Contains(direction.north))
         {
             directions.Add(direction.north);
         }
-        else if (
-            Input.GetKey(right) &&
-            (dir != direction.west || nextPart == null) &&
-            !directions.Contains(direction.east))
+        else if (Input.GetKey(right) && !directions.Contains(direction.east))
         {
             directions.Add(direction.east);
         }
-        else if (
-            Input.GetKey(down) &&
-            (dir != direction.north || nextPart == null) &&
-            !directions.Contains(direction.south))
+        else if (Input.GetKey(down) && !directions.Contains(direction.south))
         {
             directions.Add(direction.south);
         }
-        else if (
-            Input.GetKey(left) &&
-            (dir != direction.east || nextPart == null) &&
-            !directions.Contains(direction.west))
+        else if (Input.GetKey(left) && !directions.Contains(direction.west))
         {
             directions.Add(direction.west);
         }
@@ -182,22 +170,22 @@ public class SnekHead : SnekPartMove
         //Key input from list
         if (directions.Count > 0)
         {
-            if (directions[directions.Count - 1] == direction.north)  //Cannot move backwards if there's more than one part
+            if (directions[directions.Count - 1] == direction.north && (dir != direction.south || nextPart == null))  //Cannot move backwards if there's more than one part
             {
                 dir = direction.north;
                 this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
             }
-            else if (directions[directions.Count - 1] == direction.east)
+            else if (directions[directions.Count - 1] == direction.east && (dir != direction.west || nextPart == null))
             {
                 dir = direction.east;
                 this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
             }
-            else if (directions[directions.Count - 1] == direction.south)
+            else if (directions[directions.Count - 1] == direction.south && (dir != direction.north || nextPart == null))
             {
                 dir = direction.south;
                 this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
             }
-            else if (directions[directions.Count - 1] == direction.west)
+            else if (directions[directions.Count - 1] == direction.west && (dir != direction.east || nextPart == null))
             {
                 dir = direction.west;
                 this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
@@ -282,10 +270,6 @@ public class SnekHead : SnekPartMove
 		default:
 			break;
 		}
-		if (shot.GetComponent<BulletBehavior>().speed <= speed) {
-			shot.GetComponent<BulletBehavior>().speed = speed + 1.0f;
-		}
-
 		if (multShot == true) {
 			GameObject shotL = (GameObject) GameObject.Instantiate (bullet, shot.transform.position, shot.transform.rotation);
 			GameObject shotR = (GameObject) GameObject.Instantiate (bullet, shot.transform.position, shot.transform.rotation);
