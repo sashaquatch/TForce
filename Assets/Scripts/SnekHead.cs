@@ -253,6 +253,10 @@ public class SnekHead : SnekPartMove
 		default:
 			break;
 		}
+		if (shot.GetComponent<BulletBehavior>().speed <= speed) {
+			shot.GetComponent<BulletBehavior>().speed = speed + 1.0f;
+		}
+
 		if (multShot == true) {
 			GameObject shotL = (GameObject) GameObject.Instantiate (bullet, shot.transform.position, shot.transform.rotation);
 			GameObject shotR = (GameObject) GameObject.Instantiate (bullet, shot.transform.position, shot.transform.rotation);
