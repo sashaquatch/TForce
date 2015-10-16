@@ -21,8 +21,6 @@ public class SnekHead : SnekPartMove
 	public GameObject bullet;
 
 	float curTime;
-	float crazyTime;
-	float crazyBoost = 0;
 	public float fireDelay = 0.1f;
 	public bool multShot;
 	public bool mine;
@@ -81,7 +79,6 @@ public class SnekHead : SnekPartMove
 
 			else if(crazy)
 			{
-				crazyTime = curTime;
 				eat(7);
 			}
 			else if (mine) {
@@ -136,32 +133,7 @@ public class SnekHead : SnekPartMove
 
 		if (crazy) 
 		{
-			//ends crazy after time is up
-			if(curTime >= crazyTime + 1)
-			{
-				crazy = false;
 
-				//loops through train and removes speed boost of each car
-				GameObject end = this.gameObject;
-				end.GetComponent<SnekPartMove>().speed -= crazyBoost;
-				while (end.GetComponent<SnekPartMove>().NextPart != null) 
-				{
-					end = end.GetComponent<SnekPartMove>().NextPart;
-					end.GetComponent<SnekPartMove>().speed -= crazyBoost;
-					
-				}
-
-			}
-			crazyBoost+=0.125f;
-			//loops through train and boosts speed of each car
-			GameObject end2 = this.gameObject;
-			end2.GetComponent<SnekPartMove>().speed +=0.125f;
-			while (end2.GetComponent<SnekPartMove>().NextPart != null) 
-			{
-				end2 = end2.GetComponent<SnekPartMove>().NextPart;
-				end2.GetComponent<SnekPartMove>().speed +=0.125f;
-				
-			}
 		}
 		
 
