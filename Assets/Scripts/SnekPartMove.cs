@@ -75,15 +75,19 @@ public class SnekPartMove : MonoBehaviour
         {
             case direction.north:
                 transform.Translate(0, 0, offset);
+				this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                 break;
             case direction.east:
                 transform.Translate(offset, 0, 0);
+				this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
                 break;
             case direction.south:
                 transform.Translate(0, 0, -offset);
+				this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                 break;
             case direction.west:
                 transform.Translate(-offset, 0, 0);
+				this.gameObject.transform.GetChild(0).eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
                 break;
         }
     }
@@ -200,6 +204,14 @@ public class SnekPartMove : MonoBehaviour
 		//lose mines
 		if (powerUp == 6) 
 		{
+			GameObject otherPart = prevPart;
+			while(otherPart.GetComponent<SnekPartMove>().PrevPart != null && otherPart.GetComponent<SnekPartMove>().powerUp != 6)
+			{
+				otherPart = otherPart.GetComponent<SnekPartMove>().PrevPart;
+			}
+			if (otherPart.GetComponent<SnekPartMove>().powerUp != 6) {
+				otherPart.GetComponent<SnekHead>().mine = false;
+			}
 		}
 
 		//lose craziness?
