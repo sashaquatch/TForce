@@ -123,7 +123,7 @@ public class SnekHead : SnekPartMove
 		if (crazy) 
 		{
 			//ends crazy after time is up, num is used to determine length of Pup
-			if(curTime >= crazyTime + 1)
+			if(curTime >= crazyTime + 1.0f)
 			{
 				crazy = false;
 			}
@@ -141,7 +141,7 @@ public class SnekHead : SnekPartMove
 		}
 
 		//used to gradually slow down train's crazy speed boost
-		if (crazy == false && crazyBoost != 0) 
+		if (crazy == false && crazyBoost > 0.0f) 
 		{
 			//loops through train and removes speed boost of each car
 			GameObject end = this.gameObject;
