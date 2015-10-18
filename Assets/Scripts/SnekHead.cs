@@ -119,25 +119,15 @@ public class SnekHead : SnekPartMove
 		if (multShotEat) {
 			multShotEat = false;
 		}
-
+		//gradually boosts speed of train
 		if (crazy) 
 		{
-			//ends crazy after time is up
-			if(curTime >= crazyTime + 1)
+			//ends crazy after time is up, num is used to determine length of Pup
+			if(curTime >= crazyTime + 1.0f)
 			{
 				crazy = false;
-
-				//loops through train and removes speed boost of each car
-				GameObject end = this.gameObject;
-				end.GetComponent<SnekPartMove>().speed -= crazyBoost;
-				while (end.GetComponent<SnekPartMove>().NextPart != null) 
-				{
-					end = end.GetComponent<SnekPartMove>().NextPart;
-					end.GetComponent<SnekPartMove>().speed -= crazyBoost;
-					
-				}
-
 			}
+
 			crazyBoost+=0.125f;
 			//loops through train and boosts speed of each car
 			GameObject end2 = this.gameObject;
@@ -148,6 +138,34 @@ public class SnekHead : SnekPartMove
 				end2.GetComponent<SnekPartMove>().speed +=0.125f;
 				
 			}
+		}
+
+		//used to gradually slow down train's crazy speed boost
+		if (crazy == false && crazyBoost > 0.0f) 
+		{
+			//loops through train and removes speed boost of each car
+			GameObject end = this.gameObject;
+
+			end.GetComponent<SnekPartMove>().speed -= 0.125f;
+			while (end.GetComponent<SnekPartMove>().NextPart != null) 
+			{
+				end = end.GetComponent<SnekPartMove>().NextPart;
+				end.GetComponent<SnekPartMove>().speed -= 0.125f ;
+				
+				
+			}
+
+			/*
+			while (end.GetComponent<SnekPartMove>().PrevPart != null) 
+			{
+				end.GetComponent<SnekPartMove>().speed -= 0.125f;
+				end = end.GetComponent<SnekPartMove>().PrevPart;
+				
+			}
+			*/
+			
+			//end.GetComponent<SnekPartMove>().speed -= 0.125f;
+			crazyBoost -= 0.125f;
 		}
 		
 
