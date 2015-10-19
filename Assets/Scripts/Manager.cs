@@ -15,6 +15,9 @@ public class Manager : MonoBehaviour
     public GameObject multPrefab;                       //Prefab for Multiple eat powerup
     public GameObject speePrefab;                       //Prefab for Speed powerup
     public GameObject rapiPrefab;                       //Prefab for Rapid powerup
+	public GameObject multShotPrefab;
+	public GameObject minePrefab;
+	public GameObject crazyPrefab;
 
     private List<int[]> occupied;                       //List of occupied locations
     private List<GameObject> items;                     //List of existing items
@@ -32,8 +35,11 @@ public class Manager : MonoBehaviour
 
         //--> !ADD NEW POWERUPS TO DICTIONARY HERE! <--
         pupDictionary.Add(multPrefab, 50);
-        pupDictionary.Add(speePrefab, 75);
-        pupDictionary.Add(rapiPrefab, 100);
+		pupDictionary.Add(multShotPrefab,55 );
+		pupDictionary.Add(minePrefab, 65);
+        pupDictionary.Add(speePrefab, 85);
+        pupDictionary.Add(rapiPrefab, 95);
+		pupDictionary.Add(crazyPrefab, 100);
 
         //Initial generation
         generateItems();

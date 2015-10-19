@@ -140,6 +140,7 @@ public class SnekHead : SnekPartMove
 			}
 		}
 
+		/*
 		//used to gradually slow down train's crazy speed boost
 		if (crazy == false && crazyBoost > 0.0f) 
 		{
@@ -155,19 +156,19 @@ public class SnekHead : SnekPartMove
 				
 			}
 
-			/*
+
 			while (end.GetComponent<SnekPartMove>().PrevPart != null) 
 			{
 				end.GetComponent<SnekPartMove>().speed -= 0.125f;
 				end = end.GetComponent<SnekPartMove>().PrevPart;
 				
 			}
-			*/
+
 			
 			//end.GetComponent<SnekPartMove>().speed -= 0.125f;
 			crazyBoost -= 0.125f;
 		}
-		
+		*/
 
         //Go to the last snake part and trigger pos-passing
         startFromLast();
