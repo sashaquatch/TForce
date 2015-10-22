@@ -50,7 +50,7 @@ public class SnekPartMove : MonoBehaviour
     {
         offset = 0;
         transform.position = new Vector3(xPos, .5f, zPos);
-        this.gameObject.transform.GetChild(0).GetComponent<Renderer>().material = color;
+        //this.gameObject.transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material = color;
 	}
 	
 	// Update is called once per frame
@@ -135,7 +135,7 @@ public class SnekPartMove : MonoBehaviour
     {
         if(nextPart == null)    //True when tail
         {
-            nextPart = (GameObject)Instantiate(Resources.Load("SnekPart"));
+            nextPart = (GameObject)Instantiate(Resources.Load("CartLow"));
             nextPart.GetComponent<SnekPartMove>().PrevPart = transform.gameObject;
             nextPart.GetComponent<SnekPartMove>().color = color;
             nextPart.GetComponent<SnekPartMove>().speed = speed;
