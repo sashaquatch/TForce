@@ -68,6 +68,7 @@ public class TrainWreck : MonoBehaviour
 			this.gameObject.transform.parent.GetComponent<SnekHead>().setEat();
 			this.gameObject.transform.parent.GetComponent<SnekHead>().setCrazy();
 			Destroy(other.transform.parent.gameObject);
+			GameObject.Find("MusicBox").GetComponent<AudioSource>().Play();
 
 		}
         else if (other.GetComponent<Collider>().tag == "Item")
